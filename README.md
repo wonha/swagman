@@ -16,7 +16,7 @@ Run Newman with generated collection file, and validate your API Implementation.
 ```
 $ ./swagman-runner 'http://localhost:8080' ./swagman-collections/*.postman_collection.json
 ```
-You can run `newman-adviser` with your CI/CD Pipeline using Jenkins or Docker Cloud.  
+`swagman-runner` exits with return code which Jenkins can recognize if test has succeed or not. You can also use other CI/CD Pipeline such as Docker Cloud.  
 Sometimes test fixture is required to success the test.
 You can customize the order of request with Postman Application easily.
 Import your collection file into Postman, and customize your request & test code.
@@ -31,25 +31,22 @@ perl is required to run swagman and swagman-runner.
 No need to install perl by yourself.
 > for Windows users
 
-Install Perl
-##### Node.js and NPM
-Node.js and NPM is required to run newman.
-> for Mac users
-
+Install StrauberryPerl or ActivePerl according on your taste.
+##### Newman
 ```
-$ brew install node      # Install Node.js and Node Package Manager
-$ npm install -g newman  #  Install Newman
+$ npm install -g newman
 ```
-> for Windows users
-
 ##### perl YAML module
-YAML module is required to run swagman.
-> for Mac users
-
+YAML module is required to run swagman.  
+Check `cpan` is on your environment or not. If not exists, install cpan.
 ```
+$ cpan -version
 ```
-> for Windows users
+Install YAML module.
+```
+$ sudo cpan YAML
+```
 
 ##### (Optional) Postman application
-download link
+[Postman Download link](https://www.getpostman.com/)
 
