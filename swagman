@@ -6,7 +6,7 @@ use File::Basename qw( basename );
 use YAML::XS 'LoadFile';
 use Data::Dumper;
 
-# AUTHOR      : wonha.shin
+# AUTHOR      : wonha shin
 # CREATED     : 19/09/2017
 # DESCRIPTION :
 #     Auto-generate Newman collection file from Swagger YAML file.
