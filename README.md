@@ -33,18 +33,16 @@ For large API, test fixture or/and ordering of requests is required to success t
 ---
 _*Note that you need to make [environments](https://www.getpostman.com/docs/postman/environments_and_globals/manage_environments) for base URL when using Postman application._
 
-### Prerequisites
-#### perl
+## Prerequisites
+### perl
 perl is required to run swagman and swagman-runner.
-##### for Mac users
+> for Mac users
+
 No need to install perl by yourself.
-##### for Windows users
+> for Windows users
+
 Install StrauberryPerl or ActivePerl according on your taste.
-#### Newman
-```
-$ npm install -g newman
-```
-#### perl YAML module
+### perl YAML module
 YAML module is required to run swagman.  
   
 Check `cpan` is on your system or not. If not, install cpan.
@@ -55,6 +53,10 @@ Install YAML module using cpan.
 ```
 $ sudo cpan YAML
 ```
-#### (Optional) Postman application
+### Newman
+```
+$ npm install -g newman
+```
+### (Optional) Postman application
 [Postman Download link](https://www.getpostman.com/)
 
