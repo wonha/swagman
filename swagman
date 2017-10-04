@@ -10,14 +10,14 @@ use Data::Dumper;
 # CREATED     : 19/09/2017
 # DESCRIPTION :
 #     Auto-generate Newman collection file from Swagger YAML file.
-#     Generated files will locate under directory 'generated_collections'.
+#     Generated files will locate under directory 'autogen-collections'.
 #     NOTICE that all the file entries except hidden one under this directory will be unlinked whenever this generator executed.
 # USAGE       : From terminal, '$ perl [THIS_FILE_NAME] [SWAGGER_YAML_FILE_NAME]'.
 
 die "$0: usage: perl $0 [SWAGGER_YAML]\n" if @ARGV != 1 or $ARGV[0] !~ /\.(?:yml|yaml)/;
 
 my ($target_dir, $swagger_yaml);
-$target_dir = 'generated_collections';
+$target_dir = 'autogen-collections';
 $swagger_yaml = LoadFile($ARGV[0]);
 &create_postman_script();
 

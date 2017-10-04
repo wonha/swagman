@@ -4,7 +4,7 @@ target/
 dev-data/
 demo/
 unused/
-generated_collections/
+autogen-collections/
 
 ### STS ###
 .apt_generated
