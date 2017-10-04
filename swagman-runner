@@ -1,0 +1,77 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Basename qw(dirname);
+use File::Spec;
+
+# AUTHOR      : wonha.shin
+# CREATED     : 17/08/2017
+# DESCRIPTION :
+#     1. Creates Postman environment file '.env.postman_environment.json' in current directory.
+#     2. Runs all the given postman collection files with environment file.
+#     3. Remove Postman environment file.
+#     4. Return code for Jenkins
+# USAGE       : Invoke base URL and collection file name.
+
+{
+    my $illegal_invode_argument_msg = "$0: usage: perl $0 <BASE_URL> <COLLECTION_FILE(S)>\nBASE_URL should contain port number\nCOLLECTION_FILE shoud end with '.postman_collection.json'";
+    my $base_url;
+    my @collection_files;
+
+    die "$illegal_invode_argument_msg\n"
+        if ($base_url = shift @ARGV) !~ /^https?:\/\/.+$/;
+    for (@collection_files = @ARGV) {
+        die "$illegal_invode_argument_msg\n" if !/.*\.postman_collection\.json$/;
+    }
+
+    my $env_file = ".env.postman_environment.json";
+    my $return_code = &run_repeatable_newman(\@collection_files, &create_env_file($base_url, $env_file));
+    &remove_env_file();
+    $return_code ? exit 1 : exit 0;
+}
+
+
+##### Subroutines definition
+
+### input 1  : Path for current working directory.
+### input 2  : Postman environment file name.
+### output 1 : Sum of return code from newman.
+sub run_repeatable_newman {
+    my ($collection_files_ref, $env_file) = @_;
+    my $return_code = 0;
+
+    $return_code += system 'newman', 'run', '-e', "$env_file", "$_" for @$collection_files_ref;
+
+    return $return_code;
+}
+
+### input 1  : Base URL of the service.
+### output 1 : Postman environment file name.
+sub create_env_file {
+    my ($base_url, $env_file) = @_;
+    (my $msg_dump = qq{{
+      "name": "temperal",
+      "values": [
+        {
+          "enabled": true,
+          "key": "base_url",
+          "value": "$base_url",
+          "type": "text"
+        }
+      ],
+      "_postman_variable_scope": "environment",
+      "_postman_exported_using": "Postman/5.1.3"
+    }
+    }) =~ s/^\ {4}//mg;
+
+    open my $fh, '>', $env_file or die "Can't open $env_file: $!";
+    print $fh $msg_dump;
+    close $fh;
+
+    return $env_file;
+}
+
+sub remove_env_file {
+    my ($env_file) = @_;
+    unlink $env_file or warn "Can't delete $env_file: $!";
+}

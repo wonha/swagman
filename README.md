@@ -1,8 +1,9 @@
 # Swagman
+---------
 
 ## Overview
 The goal of Swagman is to create test specification from API specification. Swagman generates [Newman collection](https://www.getpostman.com/docs/postman/collection_runs/command_line_integration_with_newman) file from [Swagger YAML file](https://swagger.io/docs/specification/basic-structure/). Testing your API with auto-generated test specification assures that your API implementation is reflecting it's description documentation.  
-Each test request item of generated collection file contains assertion code in Javascript.
+Each test request item of generated collection file contains assertion code in Javascript. Swagman fits well with concept of TDD.
 
 ## Usage
 `swagman` is a Perl script which generates test specification from Swagger YAML. Swagger is the API specification tool.

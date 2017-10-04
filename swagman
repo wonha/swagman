@@ -1,0 +1,111 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Spec;
+use File::Basename qw( basename );
+use YAML::XS 'LoadFile';
+use Data::Dumper;
+
+# AUTHOR      : wonha.shin
+# CREATED     : 19/09/2017
+# DESCRIPTION :
+#     Auto-generate Newman collection file from Swagger YAML file.
+#     Generated files will locate under directory 'generated_collections'.
+#     NOTICE that all the file entries except hidden one under this directory will be unlinked whenever this generator executed.
+# USAGE       : From terminal, '$ perl [THIS_FILE_NAME] [SWAGGER_YAML_FILE_NAME]'.
+
+die "$0: usage: perl $0 [SWAGGER_YAML]\n" if @ARGV != 1 or $ARGV[0] !~ /\.(?:yml|yaml)/;
+
+my ($target_dir, $swagger_yaml);
+$target_dir = 'generated_collections';
+$swagger_yaml = LoadFile($ARGV[0]);
+&create_postman_script();
+
+sub create_postman_script {
+
+    my ($endpoint, $method, $expected_code);
+    my ($request_items, $request_item, $msg_dump);
+    my ($target_file_name, $target_uri);
+
+    for (sort keys %{$swagger_yaml->{paths}}) {
+        $endpoint = $_;
+        for (keys %{$swagger_yaml->{paths}{$endpoint}}) {
+            $method = lc;
+            for (keys %{$swagger_yaml->{paths}{$endpoint}{$method}{responses}}) {
+                $expected_code = $_;
+                next if ($expected_code !~ /^2/);
+
+                $target_file_name = do {
+                    $endpoint =~ /^\/(\w+)/;
+                    my $to = $1;
+                    $method =~ /^(delete|post)$/i ? $to.'_'.$method.'.postman_collection.json' : $to.'.postman_collection.json';
+                };
+
+                {
+                    ($request_item = qq{{
+                        "name": "{{base_url}}$endpoint",
+                        "event": [
+                            {
+                                "listen": "test",
+                                "script": {
+                                    "type": "text/javascript",
+                                    "exec": [
+                                        "tests[\\"Status code is $expected_code\\"] = responseCode.code === $expected_code;"
+                                    ]
+                                }
+                            }
+                        ],
+                        "request": {
+                            "url": "{{base_url}}$endpoint",
+                            "method": "$method",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": ""
+                            },
+                            "description": ""
+                        },
+                        "response": []
+                    }}) =~ s/^\ {8}//mg;
+
+                    push @{$request_items->{$target_file_name}}, $request_item;
+                }
+            }
+        }
+    }
+
+	unlink glob "${target_dir}/*" if (-e -d $target_dir);
+	mkdir $target_dir, 0775 or die "Can not create directory $target_dir: $!" if (! -e $target_dir or (-e _ && (! -d _)));
+
+    my $cnt = 0;
+    for (sort keys %{$request_items}) {
+        {
+            $" = ",\n";
+            /^(\w+)\./;
+			my $collection_name = "ag-".$1;
+
+            ($msg_dump = qq{{
+                "variables": [],
+                "info": {
+                    "name": "$collection_name",
+                    "_postman_id": "06f6cd53-4d25-13c5-d553-14af04195c53",
+                    "description": "",
+                    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                },
+                "item": [
+                    @{$request_items->{$_}}
+                ]
+                }}) =~ s/^\ {8}//mg;
+        }
+
+		$cnt++;
+        $cnt = sprintf "%03d", $cnt;
+		$_ = 'ag-'.$cnt.'_'.$_;
+		$target_uri = File::Spec->catfile($target_dir, $_);
+
+        open my $fh, '>', $target_uri or die "Can't open $target_uri: $!";
+        print $fh $msg_dump;
+        close $fh;
+    }
+
+}

@@ -3,6 +3,8 @@ target/
 .DS_Store
 dev-data/
 demo/
+unused/
+generated_collections/
 
 ### STS ###
 .apt_generated
