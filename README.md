@@ -58,5 +58,5 @@ $ sudo cpan YAML
 $ npm install -g newman
 ```
 ### (Optional) Postman application
-[Postman Download link](https://www.getpostman.com/)
+Download Postman form [here](https://www.getpostman.com/).
 
