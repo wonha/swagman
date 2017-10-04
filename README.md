@@ -6,9 +6,9 @@ The goal of Swagman is to generate test specification from API specification. Mo
 Swagman fits well with Test Driven Development. Testing API with auto-generated test specification from API specification can assure that your API implementation is reflecting it's description documentation.
 
 ## Dependent tools
-[Postman](https://www.getpostman.com/)
+- [Postman](https://www.getpostman.com/)
     - Postman is a REST API test tool. You can make/launch collection (sequence of request item) with Postman.
-[Newman](https://www.getpostman.com/docs/postman/collection_runs/command_line_integration_with_newman)
+- [Newman](https://www.getpostman.com/docs/postman/collection_runs/command_line_integration_with_newman)
     - Newman is a command line collection runner for Postman application.
 
 ## Usage

@@ -26,7 +26,7 @@ use File::Spec;
 
     my $env_file = ".env.postman_environment.json";
     my $return_code = &run_repeatable_newman(\@collection_files, &create_env_file($base_url, $env_file));
-    &remove_env_file();
+    &remove_files($env_file);
     $return_code ? exit 1 : exit 0;
 }
 
@@ -71,7 +71,7 @@ sub create_env_file {
     return $env_file;
 }
 
-sub remove_env_file {
-    my ($env_file) = @_;
-    unlink $env_file or warn "Can't delete $env_file: $!";
+sub remove_files {
+    my (@file) = @_;
+    unlink @file or warn "Can't delete @file: $!";
 }
