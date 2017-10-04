@@ -88,7 +88,6 @@ sub create_postman_script {
                 "variables": [],
                 "info": {
                     "name": "$collection_name",
-                    "_postman_id": "06f6cd53-4d25-13c5-d553-14af04195c53",
                     "description": "",
                     "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
                 },
