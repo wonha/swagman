@@ -59,3 +59,6 @@ $ npm install -g newman
 ```
 ### (Optional) Postman application
 Download Postman form [here](https://www.getpostman.com/).
+
+## License
+Swagman is open source software released under the [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html).
